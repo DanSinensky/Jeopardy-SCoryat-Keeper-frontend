@@ -1,5 +1,10 @@
-import { useState } from 'react'
-import './App.css'
+import { useState, useEffect } from 'react';
+import './App.css';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { verifyUser } from "./services/users.js";
+import SignUp from "./screens/SignUp/SignUp.jsx";
+import SignIn from "./screens/SignIn/SignIn.jsx";
+import SignOut from "./screens/SignOut/SignOut.jsx";
 
 function App() {
   const [count, setCount] = useState(0)
