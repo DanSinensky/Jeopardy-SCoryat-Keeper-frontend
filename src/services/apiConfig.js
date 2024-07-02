@@ -7,10 +7,10 @@ const getToken = () => {
 };
 
 const api = axios.create({
-  baseURL:
-    process.env: NODE_ENV === "production"
-      ? 
-})
+  baseURL: process.env.NODE_ENV === "production"
+    ? "https://sleepy-dawn-40063-704b6178effc.herokuapp.com/api"
+    : "https://localhost:3000/api"
+});
 
 api.interceptors.request.use(
   async function (config) {
