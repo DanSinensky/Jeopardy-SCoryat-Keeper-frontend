@@ -8,7 +8,7 @@ const getToken = () => {
 
 const api = axios.create({
   baseURL: process.env.NODE_ENV === "production"
-    ? "https://sleepy-dawn-40063-704b6178effc.herokuapp.com/api"
+    ? "https://jeopardy-scoryat-backend-5ce0a0018085.herokuapp.com/api"
     : "https://localhost:3000/api"
 });
 
