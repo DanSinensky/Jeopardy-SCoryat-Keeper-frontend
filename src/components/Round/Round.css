@@ -1,0 +1,15 @@
+.round-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
+
+.round-row {
+  display: contents;
+}
+
+.round-cell {
+  border: 1px solid #ddd;
+  padding: 10px;
+  background: #f9f9f9;
+}
