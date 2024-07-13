@@ -14,6 +14,7 @@ const unauthenticatedOptions = (
 )
 const alwaysOptions = (
     <>
+        <NavLink className="link" to="/calendar">Calendar</NavLink>
     </>
 )
 const Nav = ({ user }) => {

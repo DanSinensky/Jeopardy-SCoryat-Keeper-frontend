@@ -1,0 +1,8 @@
+.react-calendar__tile .game-links {
+  display: flex;
+  flex-direction: column;
+}
+
+.react-calendar__tile .game-links div {
+  margin-bottom: 5px;
+}

@@ -27,8 +27,8 @@ const GameDetails = () => {
           <li key={index}>{category} - {game.category_comments[index]}</li>
         ))}
       </ul>
-      <RoundComponent roundData={game.jeopardy_round} roundType="Jeopardy" />
-      <RoundComponent roundData={game.double_jeopardy_round} roundType="Double Jeopardy" />
+      <Round roundData={game.jeopardy_round} roundType="Jeopardy" />
+      <Round roundData={game.double_jeopardy_round} roundType="Double Jeopardy" />
       <h3>Final Jeopardy</h3>
       <p>{game.final_jeopardy.clue}</p>
       <p>{game.final_jeopardy.response}</p>
