@@ -5,6 +5,28 @@
   text-align: center;
 }
 
+@font-face {
+  font-family: 'CustomFontHV';
+  src: url('/fonts/hv.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'CustomFontRG';
+  src: url('/fonts/rg.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.custom-hv {
+  font-family: 'CustomFontHV', sans-serif;
+}
+
+.custom-rg {
+  font-family: 'CustomFontRG', sans-serif;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

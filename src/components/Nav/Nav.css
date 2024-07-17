@@ -22,7 +22,7 @@ nav {
     width: 100%;
 }
 
-.logo {
+/* .logo {
     font-family: 'Barbera Twisted Blocks', sans-serif;                                         
     text-align: center;
     font-weight: bold;
@@ -42,7 +42,7 @@ nav {
 
 .logo:hover {
     transform: scale(1.004);
-}
+} */
 
 .links {
     flex: 2;

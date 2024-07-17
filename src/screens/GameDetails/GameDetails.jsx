@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Round } from '../../components';
+import Layout from '../../components/Layout/Layout'; // Corrected import
+import Round from '../../components/Round/Round'; // Assuming Round is also a component you have
 import { getGameById } from '../../services/games';
 
-const GameDetails = () => {
+const GameDetails = ({ user }) => {
   const [game, setGame] = useState(null);
 
   useEffect(() => {
     const fetchGame = async () => {
-      const game = await getGameById()
-      setGame(game)
+      const game = await getGameById(); // Assuming you have a way to get the game ID
+      setGame(game);
     }
-    fetchGame()
+    fetchGame();
   }, []);
 
   if (!game) {
@@ -18,7 +19,7 @@ const GameDetails = () => {
   }
 
   return (
-    <Layout user={props.user}>
+    <Layout user={user}>
       <h2>{game.game_title}</h2>
       <p>{game.game_comments}</p>
       <h3>Categories</h3>

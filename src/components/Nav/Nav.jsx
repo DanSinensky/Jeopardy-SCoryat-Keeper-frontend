@@ -1,5 +1,7 @@
 import './Nav.css'
 import { NavLink } from 'react-router-dom'
+import '../../App.css'
+
 const authenticatedOptions = (
     <>
         <NavLink className="link" to="/favorites">Favorites</NavLink>
@@ -21,7 +23,7 @@ const Nav = ({ user }) => {
         return (
             <nav>
                 <div className="nav">
-                    <NavLink className="logo" to="/drinks">DrinkHub <img src={logo} alt="" /></NavLink>
+                    <NavLink className="custom-hv" to="/">SCoryat Keeper</NavLink>
                     <div className="links">
                         {user && <div className="link welcome">Welcome, {user.username}</div>}
                         {alwaysOptions}

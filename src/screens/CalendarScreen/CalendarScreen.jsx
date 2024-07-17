@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Calendar } from 'react-calendar';
 import { Link } from 'react-router-dom';
 import { getGames } from '../../services/games';
-import { Layout } from '../../components';
+import Layout from '../../components/Layout/Layout';
 
-const CalendarScreen = () => {
+const CalendarScreen = ({ user }) => {
   const [games, setGames] = useState([]);
 
   useEffect(() => {
     const fetchGames = async () => {
-      const allGames = await getGames()
-      setGames(allGames)
+      const allGames = await getGames();
+      setGames(allGames);
     }
-    fetchGames()
+    fetchGames();
   }, []);
 
   const tileContent = ({ date, view }) => {
@@ -29,7 +29,7 @@ const CalendarScreen = () => {
   };
   
   return (
-    <Layout user={props.user}>
+    <Layout user={user}>
       <Calendar tileContent={tileContent} />
     </Layout>
   );
