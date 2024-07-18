@@ -6,25 +6,29 @@
 }
 
 @font-face {
-  font-family: 'CustomFontHV';
-  src: url('/fonts/hv.ttf') format('truetype');
+  font-family: 'GyparodyRg';
+  src: url('/fonts/GyparodyRg-Regular.woff2') format('woff2'),
+      url('/fonts/GyparodyRg-Regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
-  font-family: 'CustomFontRG';
-  src: url('/fonts/rg.ttf') format('truetype');
-  font-weight: normal;
+  font-family: 'GyparodyHv';
+  src: url('/fonts/GyparodyHv-Regular.woff2') format('woff2'),
+      url('/fonts/GyparodyHv-Regular.woff') format('woff');
+  font-weight: 900;
   font-style: normal;
+  font-display: swap;
 }
 
 .custom-hv {
-  font-family: 'CustomFontHV', sans-serif;
+  font-family: 'GyparodyHv', sans-serif;
 }
 
 .custom-rg {
-  font-family: 'CustomFontRG', sans-serif;
+  font-family: 'GyparodyRg', sans-serif;
 }
 
 .logo {
