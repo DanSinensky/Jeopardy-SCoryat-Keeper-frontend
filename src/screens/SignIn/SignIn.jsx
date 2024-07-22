@@ -28,7 +28,7 @@ const SignIn = (props) => {
     try {
       const user = await signIn(form);
       setUser(user);
-      navigate("/");
+      navigate("/calendar");
     } catch (error) {
       console.error(error);
       setForm({
