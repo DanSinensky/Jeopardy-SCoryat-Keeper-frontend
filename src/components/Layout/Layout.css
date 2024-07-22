@@ -6,6 +6,7 @@
 
 .layout-children {
   flex: 2;
+  padding-top: 70px;
 }
 
 @media (max-width: 500px) {
@@ -16,7 +17,7 @@
   }
   .layout-children {
     width: 80vw;
-    padding: 0px;
+    padding: 70px 0 0 0;
     margin: 0px;
     display: flex;
     flex-direction: column;

@@ -9,7 +9,7 @@ const getToken = () => {
 const api = axios.create({
   baseURL: process.env.NODE_ENV === "production"
     ? "https://jeopardy-scoryat-backend-5ce0a0018085.herokuapp.com/api"
-    : "https://localhost:3000/api"
+    : "http://localhost:3000/api"
 });
 
 api.interceptors.request.use(

@@ -28,7 +28,7 @@ const SignIn = (props) => {
     try {
       const user = await signIn(form);
       setUser(user);
-      navigate("/drinks");
+      navigate("/");
     } catch (error) {
       console.error(error);
       setForm({
@@ -63,7 +63,7 @@ const SignIn = (props) => {
 
         <h3>Sign In</h3>
         <form onSubmit={onSignIn}>
-          <label for="email">Email</label>
+          <label htmlFor="email">Email</label>
           <input
             required
             type='text'
@@ -72,7 +72,7 @@ const SignIn = (props) => {
             placeholder='Enter Email'
             onChange={handleChange}
           />
-          <label for="password">Password</label>
+          <label htmlFor="password">Password</label>
           <input
             required
             name='password'
@@ -88,8 +88,5 @@ const SignIn = (props) => {
     </Layout>
   );
 };
-  
-
-
 
 export default SignIn;
