@@ -3,7 +3,7 @@ import api from "./apiConfig";
 export const getGames = async () => {
   try {
     const response = await api.get("/games");
-    return response.data
+    return response.data;
   } catch (error) {
     throw error;
   }
@@ -34,4 +34,4 @@ export const updateGame = async (id, game) => {
   } catch (error) {
     throw error;
   }
-}
+};

@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import Layout from '../../components/Layout/Layout'; // Corrected import
-import Round from '../../components/Round/Round'; // Assuming Round is also a component you have
+import { useParams } from 'react-router-dom';
+import Layout from '../../components/Layout/Layout';
+import Round from '../../components/Round/Round';
 import { getGameById } from '../../services/games';
 
 const GameDetails = ({ user }) => {
   const [game, setGame] = useState(null);
+  const { id } = useParams();
 
   useEffect(() => {
     const fetchGame = async () => {
-      const game = await getGameById(); // Assuming you have a way to get the game ID
+      const game = await getGameById(id);
       setGame(game);
-    }
+    };
     fetchGame();
-  }, []);
+  }, [id]);
 
   if (!game) {
     return <div>Loading...</div>;

@@ -6,3 +6,12 @@
 .react-calendar__tile .game-links div {
   margin-bottom: 5px;
 }
+
+.game-links {
+  padding: 5px;
+  cursor: pointer;
+}
+
+.game-list {
+  margin-top: 20px;
+}
