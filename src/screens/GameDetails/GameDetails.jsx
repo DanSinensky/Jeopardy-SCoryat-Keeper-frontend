@@ -10,8 +10,14 @@ const GameDetails = ({ user }) => {
 
   useEffect(() => {
     const fetchGame = async () => {
-      const game = await getGameById(id);
-      setGame(game);
+      try {
+        if (id) {
+          const game = await getGameById(id);
+          setGame(game);
+        }
+      } catch (error) {
+        console.error("Failed to fetch game data:", error);
+      }
     };
     fetchGame();
   }, [id]);

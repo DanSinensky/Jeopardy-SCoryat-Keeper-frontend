@@ -29,7 +29,7 @@ const App = () => {
           <Route path="/sign-in" element={<SignIn setUser={setUser} />} />
           <Route path="/sign-out" element={<SignOut setUser={setUser} />} />
           <Route path="/calendar" element={<CalendarScreen user={user} />} />
-          <Route path="/game/:gameId" element={<GameDetails user={user} />} />
+          <Route path="/game/:id" element={<GameDetails user={user} />} />
         </Routes>
       </Layout>
     </div>
