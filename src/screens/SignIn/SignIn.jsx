@@ -57,8 +57,8 @@ const SignIn = (props) => {
 
   return (
 
-    <Layout user={props.user}>
-        <div className="sign-in-body">
+    <>
+    <div className="sign-in-body">
       <div className='form-container'>
 
         <h3>Sign In</h3>
@@ -85,7 +85,7 @@ const SignIn = (props) => {
         </form>
       </div>
     </div>
-    </Layout>
+    </>
   );
 };
 

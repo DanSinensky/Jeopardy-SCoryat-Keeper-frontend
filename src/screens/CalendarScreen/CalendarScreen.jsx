@@ -43,7 +43,7 @@ const CalendarScreen = ({ user }) => {
   };
 
   return (
-    <Layout user={user}>
+    <>
       <Calendar tileContent={tileContent} />
       {selectedDate && (
         <div className="game-list">
@@ -55,7 +55,7 @@ const CalendarScreen = ({ user }) => {
           ))}
         </div>
       )}
-    </Layout>
+    </>
   );
 };
 

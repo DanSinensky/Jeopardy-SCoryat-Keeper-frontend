@@ -35,3 +35,21 @@ export const deleteScore = async (id) => {
     throw error;
   }
 }
+
+export const getScoresByUser = async (userId) => {
+  try {
+    const response = await api.get(`/scores/user/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getScoresByGame = async (gameId) => {
+  try {
+    const response = await api.get(`/scores/game/${gameId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
