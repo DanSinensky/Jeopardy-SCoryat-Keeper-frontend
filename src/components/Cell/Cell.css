@@ -1,0 +1,24 @@
+.cell {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.clue {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.response-buttons button {
+  margin: 5px;
+}
+
+.response {
+  color: #007bff;
+  font-size: 1.2em;
+  text-align: center;
+}

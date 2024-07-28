@@ -34,7 +34,7 @@ export const deleteScore = async (id) => {
   } catch (error) {
     throw error;
   }
-}
+};
 
 export const getScoresByUser = async (userId) => {
   try {

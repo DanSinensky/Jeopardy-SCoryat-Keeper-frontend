@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import Layout from '../../components/Layout/Layout';
-import Round from '../../components/Round/Round';
 import { getGameById } from '../../services/games';
+import Round from '../../components/Round/Round';
+import './GameDetails.css';
 import { getScoresByGame, getScoresByUser } from '../../services/scores';
 
 const GameDetails = ({ user }) => {
@@ -14,7 +14,14 @@ const GameDetails = ({ user }) => {
     const fetchGame = async () => {
       try {
         if (id) {
-          const game = await getGameById(id);
+          const gameData = await getGameById(id);
+
+          const jeopardyCategories = gameData.categories.slice(0, 6);
+          const doubleJeopardyCategories = gameData.categories.slice(6, 12);
+          const finalJeopardyCategory = gameData.categories.slice(12, 13);
+
+          
+
           setGame(game);
         }
       } catch (error) {
@@ -39,31 +46,43 @@ const GameDetails = ({ user }) => {
 
   const currentUserScore = scores.find(score => score.user._id === user._id)?.dollars || 0;
 
-  if (!game) {
-    return <div>Loading...</div>;
-  }
-
   return (
-    <>
-      <h2>{game.game_title}</h2>
-      <p>{game.game_comments}</p>
-      <h3>Categories</h3>
-      <ul>
-        {game.categories.map((category, index) => (
-          <li key={index}>{category} - {game.category_comments[index]}</li>
-        ))}
-      </ul>
-      <Round roundData={game.jeopardy_round} roundType="Jeopardy" userId={user._id} gameId={game._id} currentUserScore={currentUserScore} />
-      <Round roundData={game.double_jeopardy_round} roundType="Double Jeopardy" userId={user._id} gameId={game._id} currentUserScore={currentUserScore} />
-      <h3>Final Jeopardy</h3>
-      <Round roundData={{ cells: ['Final_1_1'], clues: [game.final_jeopardy.clue], responses: [game.final_jeopardy.response] }} roundType="Final Jeopardy" userId={user._id} gameId={game._id} currentUserScore={currentUserScore} />
-      <h3>Scores</h3>
-      <ul>
-        {scores.map((score) => (
-          <li key={score._id}>{score.user.username}: ${score.dollars}</li>
-        ))}
-      </ul>
-    </>
+    <div className="game-details">
+      {game ? (
+        <>
+          <h1>{game.title}</h1>
+          <Round
+            categories={game.jeopardyRound.categories}
+            clues={game.jeopardyRound.clues}
+            userId={user._id}
+            gameId={game._id}
+            roundType="Jeopardy"
+          />
+          <Round
+            categories={game.doubleJeopardyRound.categories}
+            clues={game.doubleJeopardyRound.clues}
+            userId={user._id}
+            gameId={game._id}
+            roundType="Double Jeopardy"
+          />
+          <Round
+            categories={[game.finalJeopardy.category]}
+            clues={[game.finalJeopardy.clue]}
+            userId={user._id}
+            gameId={game._id}
+            roundType="Final Jeopardy"
+          />
+          <h3>Scores</h3>
+          <ul>
+            {scores.map((score) => (
+              <li key={score._id}>{score.user.username}: ${score.dollars}</li>
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p className="loading">Loading...</p>
+      )}
+    </div>
   );
 };
 

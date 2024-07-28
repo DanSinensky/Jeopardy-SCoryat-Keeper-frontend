@@ -1,0 +1,13 @@
+.game-details {
+  padding: 20px;
+}
+
+.game-details h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.loading {
+  text-align: center;
+  font-size: 1.2em;
+}

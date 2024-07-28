@@ -1,15 +1,22 @@
-.round-grid {
+.round {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 10px;
 }
 
-.round-row {
-  display: contents;
-}
-
-.round-cell {
+.category {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   border: 1px solid #ddd;
   padding: 10px;
-  background: #f9f9f9;
+}
+
+.category-title {
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.cell {
+  margin: 5px 0;
 }
