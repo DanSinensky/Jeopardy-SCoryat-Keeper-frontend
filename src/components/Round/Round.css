@@ -1,22 +1,38 @@
 .round {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
 }
 
-.category {
+.round-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.round-table th,
+.round-table td {
+  border: 1px solid #000;
+  text-align: center;
+  vertical-align: middle;
+  padding: 10px;
+  width: calc(100% / 6);
+}
+
+.round-table th {
+  background-color: #f4f4f4;
+}
+
+.round-table td div {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid #ddd;
-  padding: 10px;
 }
 
-.category-title {
-  margin-bottom: 10px;
-  text-align: center;
+.round-table td div p {
+  margin: 0;
+  font-size: 14px;
 }
 
-.cell {
+.round-table td div button {
   margin: 5px 0;
 }

@@ -20,9 +20,36 @@ const GameDetails = ({ user }) => {
           const doubleJeopardyCategories = gameData.categories.slice(6, 12);
           const finalJeopardyCategory = gameData.categories.slice(12, 13);
 
-          
+          const jeopardyCategoryComments = gameData.category_comments.slice(0, 6);
+          const doubleJeopardyCategoryComments = gameData.category_comments.slice(6, 12);
+          const finalJeopardyCategoryComment = gameData.category_comments.slice(12, 13);
 
-          setGame(game);
+          const transformedGame = {
+            ...gameData,
+            jeopardy_round: {
+              categories: jeopardyCategories,
+              categoryComments: jeopardyCategoryComments,
+              cells: gameData.jeopardy_round.cells,
+              clues: gameData.jeopardy_round.clues,
+              responses: gameData.jeopardy_round.responses,
+            },
+            double_jeopardy_round: {
+              categories: doubleJeopardyCategories,
+              categoryComments: doubleJeopardyCategoryComments,
+              cells: gameData.double_jeopardy_round.cells,
+              clues: gameData.double_jeopardy_round.clues,
+              responses: gameData.double_jeopardy_round.responses,
+            },
+            final_jeopardy_round: {
+              categories: finalJeopardyCategory,
+              categoryComments: finalJeopardyCategoryComment,
+              clues: gameData.final_jeopardy.clue,
+              responses: gameData.final_jeopardy.response,
+              cells: ['Final_1_1']
+            }
+          };
+
+          setGame(transformedGame);
         }
       } catch (error) {
         console.error("Failed to fetch game data:", error);
@@ -52,22 +79,28 @@ const GameDetails = ({ user }) => {
         <>
           <h1>{game.title}</h1>
           <Round
-            categories={game.jeopardyRound.categories}
-            clues={game.jeopardyRound.clues}
+            // categories={game.jeopardyRound.categories}
+            // categoryComments={game.jeopardyRound.categoryComments}
+            // clues={game.jeopardyRound.clues}
+            roundData={game.jeopardy_round}
             userId={user._id}
             gameId={game._id}
             roundType="Jeopardy"
           />
           <Round
-            categories={game.doubleJeopardyRound.categories}
-            clues={game.doubleJeopardyRound.clues}
+            // categories={game.doubleJeopardyRound.categories}
+            // categoryComments={game.doubleJeopardyRound.categoryComments}
+            // clues={game.doubleJeopardyRound.clues}
+            roundData={game.double_jeopardy_round}
             userId={user._id}
             gameId={game._id}
             roundType="Double Jeopardy"
           />
           <Round
-            categories={[game.finalJeopardy.category]}
-            clues={[game.finalJeopardy.clue]}
+            // categories={game.finalJeopardyRound.categories}
+            // categoryComments={game.finalJeopardyRound.categoryComments}
+            // clues={[game.finalJeopardyRound.clue]}
+            roundData={game.final_jeopardy_round}
             userId={user._id}
             gameId={game._id}
             roundType="Final Jeopardy"

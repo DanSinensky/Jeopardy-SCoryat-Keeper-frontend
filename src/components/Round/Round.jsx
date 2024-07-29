@@ -1,26 +1,120 @@
-import React from 'react';
-import Cell from '../Cell/Cell';
+import React, { useState, useEffect } from 'react';
+import { createScore, updateScore, getScoresByUser } from '../../services/scores';
 import './Round.css';
 
-const Round = ({ categories, clues, userId, gameId, roundType }) => {
+const parseCell = (cell) => {
+  const parts = cell.split('_');
+  return {
+    round: parts[0],
+    column: parseInt(parts[1], 10),
+    row: parseInt(parts[2], 10),
+    cellType: parts.length > 3 ? parts[3] : 'regular' // Determine the cellType based on parts
+  };
+};
+
+const Round = ({ roundData, userId, gameId, roundType }) => {
+  const [selectedCell, setSelectedCell] = useState(null);
+  const [wager, setWager] = useState('');
+  const [userScore, setUserScore] = useState(null);
+
+  useEffect(() => {
+    console.log('roundData:', roundData);
+  }, [roundData]);
+
+  const handleCellClick = (cell) => {
+    if (selectedCell !== cell) {
+      setSelectedCell(cell);
+    }
+  };
+
+  const handleScoreUpdate = async (value) => {
+    const points = roundType === 'Jeopardy' ? selectedCell.row * 200 : selectedCell.row * 400;
+
+    let newScore;
+    if (selectedCell.cellType === 'Final Jeopardy') {
+      newScore = value === 'Correct' ? parseInt(wager, 10) : -parseInt(wager, 10);
+    } else {
+      newScore = value === 'Correct' ? points : value === 'Incorrect' ? -points : 0;
+    }
+
+    try {
+      const existingScores = await getScoresByUser(userId);
+      const score = existingScores.find((s) => s.gameId === gameId);
+      if (score) {
+        await updateScore(score._id, { dollars: score.dollars + newScore });
+      } else {
+        await createScore({ dollars: newScore, userId, gameId });
+      }
+    } catch (error) {
+      console.error('Failed to update score:', error);
+    }
+
+    setSelectedCell(null);
+  };
+
+  const handleWagerChange = (event) => {
+    setWager(event.target.value);
+  };
+
+  // Initialize grid
+  const grid = Array.from({ length: 5 }, () => Array(6).fill(null));
+
+  // Only populate the grid if roundData is available
+  if (roundData?.cells) {
+    roundData.cells.forEach((cell, index) => {
+      const parsedCell = parseCell(cell);
+      const { column, row } = parsedCell;
+      grid[row - 1][column - 1] = {
+        clue: roundData.clues[index],
+        response: roundData.responses[index],
+        cellType: parsedCell.cellType,
+      };
+    });
+  }
+
   return (
     <div className="round">
-      {categories.map((category, colIndex) => (
-        <div key={colIndex} className="category">
-          <h3 className="category-title">{category}</h3>
-          {clues[colIndex].map((clue, rowIndex) => (
-            <Cell
-              key={rowIndex}
-              clue={clue.clue}
-              response={clue.response}
-              userId={userId}
-              gameId={gameId}
-              roundType={roundType}
-              row={rowIndex}
-            />
+      <h3>{roundType}</h3>
+      <table className="round-table">
+        <thead>
+          <tr>
+            {roundData?.categories?.map((category, index) => (
+              <th key={index}>
+                {category}
+                <div>{roundData.categoryComments[index]}</div>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {grid.map((row, rowIndex) => (
+            <tr key={rowIndex}>
+              {row.map((cell, columnIndex) => (
+                <td key={columnIndex} onClick={() => handleCellClick({ ...cell, row: rowIndex + 1, column: columnIndex + 1 })}>
+                  {cell ? (
+                    <div>
+                      <p>{selectedCell && selectedCell.row === rowIndex + 1 && selectedCell.column === columnIndex + 1 ? cell.response : cell.clue}</p>
+                      {selectedCell && selectedCell.row === rowIndex + 1 && selectedCell.column === columnIndex + 1 && (
+                        <div>
+                          <button onClick={() => handleScoreUpdate('Correct')}>Correct</button>
+                          <button onClick={() => handleScoreUpdate('Incorrect')}>Incorrect</button>
+                          <button onClick={() => handleScoreUpdate('No Guess')}>No Guess</button>
+                        </div>
+                      )}
+                    </div>
+                  ) : null}
+                </td>
+              ))}
+            </tr>
           ))}
+        </tbody>
+      </table>
+      {selectedCell && selectedCell.cellType === 'Final Jeopardy' && (
+        <div>
+          <label>Enter your wager:</label>
+          <input type="number" value={wager} onChange={handleWagerChange} max={userScore?.dollars || 0} />
         </div>
-      ))}
+      )}
     </div>
   );
 };
