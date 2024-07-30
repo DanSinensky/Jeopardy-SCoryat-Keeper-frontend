@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createScore, updateScore, getScoresByUser } from '../../services/scores';
+import Cell from '../Cell/Cell';
 import './Round.css';
 
 const parseCell = (cell) => {
@@ -56,8 +57,19 @@ const Round = ({ roundData, userId, gameId, roundType }) => {
     setWager(event.target.value);
   };
 
+  // Determine the highest row and column
+  let maxRow = 0;
+  let maxColumn = 0;
+  if (roundData?.cells) {
+    roundData.cells.forEach((cell) => {
+      const parsedCell = parseCell(cell);
+      if (parsedCell.row > maxRow) maxRow = parsedCell.row;
+      if (parsedCell.column > maxColumn) maxColumn = parsedCell.column;
+    });
+  }
+
   // Initialize grid
-  const grid = Array.from({ length: 5 }, () => Array(6).fill(null));
+  const grid = Array.from({ length: maxRow }, () => Array(maxColumn).fill(null));
 
   // Only populate the grid if roundData is available
   if (roundData?.cells) {
@@ -90,20 +102,18 @@ const Round = ({ roundData, userId, gameId, roundType }) => {
           {grid.map((row, rowIndex) => (
             <tr key={rowIndex}>
               {row.map((cell, columnIndex) => (
-                <td key={columnIndex} onClick={() => handleCellClick({ ...cell, row: rowIndex + 1, column: columnIndex + 1 })}>
-                  {cell ? (
-                    <div>
-                      <p>{selectedCell && selectedCell.row === rowIndex + 1 && selectedCell.column === columnIndex + 1 ? cell.response : cell.clue}</p>
-                      {selectedCell && selectedCell.row === rowIndex + 1 && selectedCell.column === columnIndex + 1 && (
-                        <div>
-                          <button onClick={() => handleScoreUpdate('Correct')}>Correct</button>
-                          <button onClick={() => handleScoreUpdate('Incorrect')}>Incorrect</button>
-                          <button onClick={() => handleScoreUpdate('No Guess')}>No Guess</button>
-                        </div>
-                      )}
-                    </div>
-                  ) : null}
-                </td>
+                <Cell
+                  key={columnIndex}
+                  cell={cell}
+                  selectedCell={selectedCell}
+                  handleCellClick={handleCellClick}
+                  handleScoreUpdate={handleScoreUpdate}
+                  rowIndex={rowIndex}
+                  columnIndex={columnIndex}
+                  wager={wager}
+                  handleWagerChange={handleWagerChange}
+                  userScore={userScore}
+                />
               ))}
             </tr>
           ))}

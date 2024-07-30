@@ -1,59 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import { createScore, updateScore, getScoresByUser } from '../../services/scores';
-import './Cell.css';
+import React from 'react';
 
-const Cell = ({ clue, response, userId, gameId, roundType, row }) => {
-  const [isAnswered, setIsAnswered] = useState(false);
-  const [userScore, setUserScore] = useState(null);
-  
-  const handleResponse = async (responseType) => {
-    let scoreChange;
-    if (responseType === 'Correct') {
-      scoreChange = roundType === 'Final Jeopardy' ? parseInt(userScore.wager) : 200 * (row + 1);
-    } else if (responseType === 'Incorrect') {
-      scoreChange = roundType === 'Final Jeopardy' ? -parseInt(userScore.wager) : -200 * (row + 1);
-    } else {
-      scoreChange = 0;
-    }
-
-    let scoreData = {
-      userId,
-      gameId,
-      score: userScore ? userScore.score + scoreChange : scoreChange,
-    };
-
-    if (userScore) {
-      await updateScore(userScore._id, scoreData);
-    } else {
-      await createScore(scoreData);
-    }
-
-    setIsAnswered(true);
-  };
-
-  const fetchUserScore = async () => {
-    const scores = await getScoresByUser(userId);
-    const userGameScore = scores.find(score => score.gameId === gameId);
-    setUserScore(userGameScore);
-  };
-
-  useEffect(() => {
-    fetchUserScore();
-  }, []);
-
+const Cell = ({ cell, selectedCell, handleCellClick, handleScoreUpdate, rowIndex, columnIndex, wager, handleWagerChange, userScore }) => {
   return (
-    <div className="cell">
-      <div className="clue">{clue}</div>
-      {isAnswered ? (
-        <div className="response">{response}</div>
-      ) : (
-        <div className="response-buttons">
-          <button onClick={() => handleResponse('Correct')}>Correct</button>
-          <button onClick={() => handleResponse('Incorrect')}>Incorrect</button>
-          <button onClick={() => handleResponse('No Guess')}>No Guess</button>
+    <td onClick={() => handleCellClick({ ...cell, row: rowIndex + 1, column: columnIndex + 1 })}>
+      {cell ? (
+        <div>
+          <p>{selectedCell && selectedCell.row === rowIndex + 1 && selectedCell.column === columnIndex + 1 ? cell.response : cell.clue}</p>
+          {selectedCell && selectedCell.row === rowIndex + 1 && selectedCell.column === columnIndex + 1 && (
+            <div>
+              <button onClick={() => handleScoreUpdate('Correct')}>Correct</button>
+              <button onClick={() => handleScoreUpdate('Incorrect')}>Incorrect</button>
+              <button onClick={() => handleScoreUpdate('No Guess')}>No Guess</button>
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      ) : null}
+    </td>
   );
 };
 
