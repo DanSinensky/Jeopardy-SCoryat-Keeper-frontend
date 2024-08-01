@@ -1,38 +1,26 @@
 .round {
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
+  margin: 20px 0;
 }
 
 .round-table {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
-.round-table th,
-.round-table td {
-  border: 1px solid #000;
+.round-table th, .round-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
   text-align: center;
   vertical-align: middle;
-  padding: 10px;
-  width: calc(100% / 6);
 }
 
 .round-table th {
-  background-color: #f4f4f4;
+  background-color: #f2f2f2;
 }
 
-.round-table td div {
+.response-buttons {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.round-table td div p {
-  margin: 0;
-  font-size: 14px;
-}
-
-.round-table td div button {
-  margin: 5px 0;
+  justify-content: space-around;
+  margin-top: 5px;
 }

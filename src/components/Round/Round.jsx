@@ -9,12 +9,11 @@ const parseCell = (cell) => {
     round: parts[0],
     column: parseInt(parts[1], 10),
     row: parseInt(parts[2], 10),
-    cellType: parts.length > 3 ? parts[3] : 'regular' // Determine the cellType based on parts
+    cellType: parts.length > 3 ? parts[3] : 'regular'
   };
 };
 
-const Round = ({ roundData, userId, gameId, roundType }) => {
-  const [selectedCell, setSelectedCell] = useState(null);
+const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell }) => {
   const [wager, setWager] = useState('');
   const [userScore, setUserScore] = useState(null);
 
@@ -57,7 +56,6 @@ const Round = ({ roundData, userId, gameId, roundType }) => {
     setWager(event.target.value);
   };
 
-  // Determine the highest row and column
   let maxRow = 0;
   let maxColumn = 0;
   if (roundData?.cells) {
@@ -68,10 +66,8 @@ const Round = ({ roundData, userId, gameId, roundType }) => {
     });
   }
 
-  // Initialize grid
   const grid = Array.from({ length: maxRow }, () => Array(maxColumn).fill(null));
 
-  // Only populate the grid if roundData is available
   if (roundData?.cells) {
     roundData.cells.forEach((cell, index) => {
       const parsedCell = parseCell(cell);

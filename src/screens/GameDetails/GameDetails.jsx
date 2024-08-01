@@ -8,6 +8,7 @@ import { getScoresByGame, getScoresByUser } from '../../services/scores';
 const GameDetails = ({ user }) => {
   const [game, setGame] = useState(null);
   const [scores, setScores] = useState([]);
+  const [selectedCell, setSelectedCell] = useState(null);
   const { id } = useParams();
 
   useEffect(() => {
@@ -79,41 +80,35 @@ const GameDetails = ({ user }) => {
         <>
           <h1>{game.title}</h1>
           <Round
-            // categories={game.jeopardyRound.categories}
-            // categoryComments={game.jeopardyRound.categoryComments}
-            // clues={game.jeopardyRound.clues}
             roundData={game.jeopardy_round}
             userId={user._id}
             gameId={game._id}
             roundType="Jeopardy"
+            selectedCell={selectedCell}
+            setSelectedCell={setSelectedCell}
+            userScore={currentUserScore}
           />
           <Round
-            // categories={game.doubleJeopardyRound.categories}
-            // categoryComments={game.doubleJeopardyRound.categoryComments}
-            // clues={game.doubleJeopardyRound.clues}
             roundData={game.double_jeopardy_round}
             userId={user._id}
             gameId={game._id}
             roundType="Double Jeopardy"
+            selectedCell={selectedCell}
+            setSelectedCell={setSelectedCell}
+            userScore={currentUserScore}
           />
           <Round
-            // categories={game.finalJeopardyRound.categories}
-            // categoryComments={game.finalJeopardyRound.categoryComments}
-            // clues={[game.finalJeopardyRound.clue]}
             roundData={game.final_jeopardy_round}
             userId={user._id}
             gameId={game._id}
             roundType="Final Jeopardy"
+            selectedCell={selectedCell}
+            setSelectedCell={setSelectedCell}
+            userScore={currentUserScore}
           />
-          <h3>Scores</h3>
-          <ul>
-            {scores.map((score) => (
-              <li key={score._id}>{score.user.username}: ${score.dollars}</li>
-            ))}
-          </ul>
         </>
       ) : (
-        <p className="loading">Loading...</p>
+        <p>Loading game details...</p>
       )}
     </div>
   );
