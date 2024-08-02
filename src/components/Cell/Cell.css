@@ -4,6 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid #ddd;
 }
 
 .cell p {
@@ -20,12 +21,15 @@
   margin: 5px;
 }
 
-.cell {
-  cursor: pointer;
-  padding: 10px;
-  border: 1px solid #ddd;
+.cell.selected {
+  background-color: #f0f0f0;
 }
 
-.cell.selected {
-  background-color: #f9c2ff;
+.response-buttons button:disabled {
+  cursor: not-allowed;
+}
+
+input[type="number"] {
+  width: 100px;
+  padding: 5px;
 }

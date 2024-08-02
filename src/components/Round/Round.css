@@ -1,6 +1,7 @@
 .round-table {
   border-collapse: collapse;
   width: 100%;
+  table-layout: fixed;
 }
 
 .round-table th,
@@ -12,4 +13,9 @@
 
 .selected {
   background-color: yellow;
+}
+
+input[type="number"] {
+  width: 100px;
+  padding: 5px;
 }
