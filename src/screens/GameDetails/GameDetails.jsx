@@ -44,8 +44,8 @@ const GameDetails = ({ user }) => {
             final_jeopardy_round: {
               categories: finalJeopardyCategory,
               categoryComments: finalJeopardyCategoryComment,
-              clues: gameData.final_jeopardy.clue,
-              responses: gameData.final_jeopardy.response,
+              clues: [gameData.final_jeopardy.clue],
+              responses: [gameData.final_jeopardy.response],
               cells: ['FJ_1_1']
             }
           };
