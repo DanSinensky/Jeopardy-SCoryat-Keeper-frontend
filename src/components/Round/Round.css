@@ -1,26 +1,15 @@
-.round {
-  margin: 20px 0;
-}
-
 .round-table {
-  width: 100%;
   border-collapse: collapse;
-  table-layout: fixed;
+  width: 100%;
 }
 
-.round-table th, .round-table td {
+.round-table th,
+.round-table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
-  vertical-align: middle;
 }
 
-.round-table th {
-  background-color: #f2f2f2;
-}
-
-.response-buttons {
-  display: flex;
-  justify-content: space-around;
-  margin-top: 5px;
+.selected {
+  background-color: yellow;
 }

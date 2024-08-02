@@ -15,7 +15,6 @@ const parseCell = (cell) => {
 
 const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell }) => {
   const [wager, setWager] = useState('');
-  const [userScore, setUserScore] = useState(null);
 
   useEffect(() => {
     console.log('roundData:', roundData);
@@ -23,7 +22,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
 
   const handleCellClick = (cell) => {
     if (selectedCell !== cell) {
-      setSelectedCell(cell);
+      setSelectedCell({ ...cell, roundType });
     }
   };
 
@@ -108,7 +107,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
                   columnIndex={columnIndex}
                   wager={wager}
                   handleWagerChange={handleWagerChange}
-                  userScore={userScore}
+                  roundType={roundType}
                 />
               ))}
             </tr>

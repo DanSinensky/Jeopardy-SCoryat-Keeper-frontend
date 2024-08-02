@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { getGameById } from '../../services/games';
 import Round from '../../components/Round/Round';
 import './GameDetails.css';
-import { getScoresByGame, getScoresByUser } from '../../services/scores';
+import { getScoresByGame } from '../../services/scores';
 
 const GameDetails = ({ user }) => {
   const [game, setGame] = useState(null);
@@ -46,7 +46,7 @@ const GameDetails = ({ user }) => {
               categoryComments: finalJeopardyCategoryComment,
               clues: gameData.final_jeopardy.clue,
               responses: gameData.final_jeopardy.response,
-              cells: ['Final_1_1']
+              cells: ['FJ_1_1']
             }
           };
 
