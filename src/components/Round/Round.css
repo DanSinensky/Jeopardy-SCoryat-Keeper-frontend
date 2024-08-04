@@ -11,10 +11,6 @@
   text-align: center;
 }
 
-.selected {
-  background-color: yellow;
-}
-
 input[type="number"] {
   width: 100px;
   padding: 5px;

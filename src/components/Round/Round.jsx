@@ -1,58 +1,64 @@
 import React, { useState, useEffect } from 'react';
-import { createScore, updateScore, getScoresByUser } from '../../services/scores';
 import Cell from '../Cell/Cell';
 import './Round.css';
+import { updateScore } from '../../services/scores';
 
-const parseCell = (cell) => {
-  const parts = cell.split('_');
-  return {
-    round: parts[0],
-    column: parseInt(parts[1], 10),
-    row: parseInt(parts[2], 10),
-    cellType: parts.length > 3 ? parts[3] : 'regular'
-  };
-};
-
-const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell }) => {
+const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell, userScore, onComplete }) => {
   const [wager, setWager] = useState('');
 
   useEffect(() => {
-    console.log('roundData:', roundData);
-  }, [roundData]);
+    const allCellsRevealed = roundData.cells.every(row => Array.isArray(row) && row.every(cell => cell.revealed));
+    if (allCellsRevealed && onComplete) {
+      onComplete(roundType);
+    }
+  }, [roundData, roundType, onComplete]);
 
   const handleCellClick = (cell) => {
-    if (selectedCell !== cell) {
-      setSelectedCell({ ...cell, roundType });
-    }
+    setSelectedCell(cell);
   };
 
-  const handleScoreUpdate = async (value) => {
-    const points = roundType === 'Jeopardy' ? selectedCell.row * 200 : selectedCell.row * 400;
+  const handleScoreUpdate = async (result) => {
+    let scoreChange = 0;
+    const cellValue = roundData.clues[selectedCell.row - 1][selectedCell.column - 1].value;
 
-    let newScore;
-    if (selectedCell.cellType === 'Final Jeopardy') {
-      newScore = value === 'Correct' ? parseInt(wager, 10) : -parseInt(wager, 10);
+    if (roundType === 'Final Jeopardy') {
+      scoreChange = result === 'Correct' ? wager : -wager;
     } else {
-      newScore = value === 'Correct' ? points : value === 'Incorrect' ? -points : 0;
+      scoreChange = result === 'Correct' ? cellValue : result === 'Incorrect' ? -cellValue : 0;
     }
 
+    const newScore = userScore + scoreChange;
+    
     try {
-      const existingScores = await getScoresByUser(userId);
-      const score = existingScores.find((s) => s.gameId === gameId);
-      if (score) {
-        await updateScore(score._id, { dollars: score.dollars + newScore });
-      } else {
-        await createScore({ dollars: newScore, userId, gameId });
-      }
+      await updateScore(gameId, userId, newScore);
     } catch (error) {
-      console.error('Failed to update score:', error);
+      console.error("Failed to update score:", error);
     }
 
+    const updatedCells = roundData.cells.map((row, rowIndex) => 
+      row.map((cell, colIndex) => 
+        (rowIndex === selectedCell.row - 1 && colIndex === selectedCell.column - 1)
+          ? { ...cell, revealed: true }
+          : cell
+      )
+    );
+
+    roundData.cells = updatedCells;
     setSelectedCell(null);
   };
 
   const handleWagerChange = (event) => {
-    setWager(event.target.value);
+    setWager(Number(event.target.value));
+  };
+
+  const parseCell = (cell) => {
+    const parts = cell.split('_');
+    return {
+      round: parts[0],
+      column: parseInt(parts[1], 10),
+      row: parseInt(parts[2], 10),
+      cellType: parts.length > 3 ? parts[3] : 'regular'
+    };
   };
 
   let maxRow = 0;

@@ -9,6 +9,8 @@ const GameDetails = ({ user }) => {
   const [game, setGame] = useState(null);
   const [scores, setScores] = useState([]);
   const [selectedCell, setSelectedCell] = useState(null);
+  const [jeopardyCompleted, setJeopardyCompleted] = useState(false);
+  const [doubleJeopardyCompleted, setDoubleJeopardyCompleted] = useState(false);
   const { id } = useParams();
 
   useEffect(() => {
@@ -72,6 +74,14 @@ const GameDetails = ({ user }) => {
     fetchScores();
   }, [id]);
 
+  const handleRoundCompletion = (roundType) => {
+    if (roundType === 'Jeopardy') {
+      setJeopardyCompleted(true);
+    } else if (roundType === 'Double Jeopardy') {
+      setDoubleJeopardyCompleted(true);
+    }
+  };
+
   const currentUserScore = scores.find(score => score.user._id === user._id)?.dollars || 0;
 
   return (
@@ -79,6 +89,15 @@ const GameDetails = ({ user }) => {
       {game ? (
         <>
           <h1>{game.title}</h1>
+          <div className="user-scores">
+            <h2>All Users' Scores</h2>
+            <ul>
+              {scores.map(score => (
+                <li key={score.user._id}>{score.user.username}: ${score.dollars}</li>
+              ))}
+            </ul>
+            <h3>Your Score: ${currentUserScore}</h3>
+          </div>
           <Round
             roundData={game.jeopardy_round}
             userId={user._id}
@@ -87,25 +106,31 @@ const GameDetails = ({ user }) => {
             selectedCell={selectedCell}
             setSelectedCell={setSelectedCell}
             userScore={currentUserScore}
+            onComplete={() => handleRoundCompletion('Jeopardy')}
           />
-          <Round
-            roundData={game.double_jeopardy_round}
-            userId={user._id}
-            gameId={game._id}
-            roundType="Double Jeopardy"
-            selectedCell={selectedCell}
-            setSelectedCell={setSelectedCell}
-            userScore={currentUserScore}
-          />
-          <Round
-            roundData={game.final_jeopardy_round}
-            userId={user._id}
-            gameId={game._id}
-            roundType="Final Jeopardy"
-            selectedCell={selectedCell}
-            setSelectedCell={setSelectedCell}
-            userScore={currentUserScore}
-          />
+          {jeopardyCompleted && (
+            <Round
+              roundData={game.double_jeopardy_round}
+              userId={user._id}
+              gameId={game._id}
+              roundType="Double Jeopardy"
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              userScore={currentUserScore}
+              onComplete={() => handleRoundCompletion('Double Jeopardy')}
+            />
+          )}
+          {doubleJeopardyCompleted && (
+            <Round
+              roundData={game.final_jeopardy_round}
+              userId={user._id}
+              gameId={game._id}
+              roundType="Final Jeopardy"
+              selectedCell={selectedCell}
+              setSelectedCell={setSelectedCell}
+              userScore={currentUserScore}
+            />
+          )}
         </>
       ) : (
         <p>Loading game details...</p>

@@ -18,13 +18,23 @@ export const createScore = async (score) => {
   }
 };
 
-export const updateScore = async (id, score) => {
+// export const updateScore = async (id, score) => {
+//   try {
+//     const response = await api.put(`/scores/${id}`, score);
+//     return response.data;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+
+export const updateScore = async (gameId, userId, newScore) => {
   try {
-    const response = await api.put(`/scores/${id}`, score);
+    const response = await api.put(`/scores/${gameId}/${userId}`, { newScore });
     return response.data;
   } catch (error) {
     throw error;
   }
+
 };
 
 export const deleteScore = async (id) => {
