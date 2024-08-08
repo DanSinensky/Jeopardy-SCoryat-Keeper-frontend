@@ -114,6 +114,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
                   wager={wager}
                   handleWagerChange={handleWagerChange}
                   roundType={roundType}
+                  userScore={userScore}
                 />
               ))}
             </tr>
@@ -125,6 +126,9 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
           <label>Enter your wager:</label>
           <input type="number" value={wager} onChange={handleWagerChange} max={userScore?.dollars || 0} />
         </div>
+      )}
+      {roundType !== 'Final Jeopardy' && (
+        <button onClick={() => onComplete(roundType)}>Complete {roundType}</button>
       )}
     </div>
   );
