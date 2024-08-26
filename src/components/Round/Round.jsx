@@ -1,71 +1,58 @@
 import React, { useState, useEffect } from 'react';
+import { createScore, updateScore, getScoresByUser } from '../../services/scores';
 import Cell from '../Cell/Cell';
 import './Round.css';
-import { updateScore } from '../../services/scores';
 
-const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell, userScore, onComplete }) => {
-  const [revealedCells, setRevealedCells] = useState({});
+const parseCell = (cell) => {
+  const parts = cell.split('_');
+  return {
+    round: parts[0],
+    column: parseInt(parts[1], 10),
+    row: parseInt(parts[2], 10),
+    cellType: parts.length > 3 ? parts[3] : 'regular'
+  };
+};
+
+const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell }) => {
   const [wager, setWager] = useState('');
 
   useEffect(() => {
-    const allCellsRevealed = roundData.cells.every(row => 
-      Array.isArray(row) && row.every(cell => cell.revealed)
-    );
-    if (allCellsRevealed && onComplete) {
-      onComplete(roundType);
-    }
-  }, [roundData, roundType, onComplete]);
+    console.log('roundData:', roundData);
+  }, [roundData]);
 
-  const handleCellClick = (rowIndex, columnIndex, cellType) => {
-    setSelectedCell({ row: rowIndex + 1, column: columnIndex + 1, cellType });
-    setRevealedCells((prev) => ({
-      ...prev,
-      [`${rowIndex}-${columnIndex}`]: !prev[`${rowIndex}-${columnIndex}`],
-    }));
+  const handleCellClick = (cell) => {
+    if (selectedCell !== cell) {
+      setSelectedCell({ ...cell, roundType });
+    }
   };
 
-  const handleScoreUpdate = async (result) => {
-    let scoreChange = 0;
-    const cellValue = roundData.clues[selectedCell.row - 1][selectedCell.column - 1].value;
+  const handleScoreUpdate = async (value) => {
+    const points = roundType === 'Jeopardy' ? selectedCell.row * 200 : selectedCell.row * 400;
 
-    if (roundType === 'Final Jeopardy') {
-      scoreChange = result === 'Correct' ? wager : -wager;
+    let newScore;
+    if (selectedCell.cellType === 'Final Jeopardy') {
+      newScore = value === 'Correct' ? parseInt(wager, 10) : -parseInt(wager, 10);
     } else {
-      scoreChange = result === 'Correct' ? cellValue : result === 'Incorrect' ? -cellValue : 0;
+      newScore = value === 'Correct' ? points : value === 'Incorrect' ? -points : 0;
     }
 
-    const newScore = userScore + scoreChange;
-    
     try {
-      await updateScore(gameId, userId, newScore);
+      const existingScores = await getScoresByUser(userId);
+      const score = existingScores.find((s) => s.gameId === gameId);
+      if (score) {
+        await updateScore(score._id, { dollars: score.dollars + newScore });
+      } else {
+        await createScore({ dollars: newScore, userId, gameId });
+      }
     } catch (error) {
-      console.error("Failed to update score:", error);
+      console.error('Failed to update score:', error);
     }
 
-    const updatedCells = roundData.cells.map((row, rowIndex) => 
-      row.map((cell, colIndex) => 
-        (rowIndex === selectedCell.row - 1 && colIndex === selectedCell.column - 1)
-          ? { ...cell, revealed: true }
-          : cell
-      )
-    );
-
-    roundData.cells = updatedCells;
     setSelectedCell(null);
   };
 
   const handleWagerChange = (event) => {
-    setWager(Number(event.target.value));
-  };
-
-  const parseCell = (cell) => {
-    const parts = cell.split('_');
-    return {
-      round: parts[0],
-      column: parseInt(parts[1], 10),
-      row: parseInt(parts[2], 10),
-      cellType: parts.length > 3 ? parts[3] : 'regular'
-    };
+    setWager(event.target.value);
   };
 
   let maxRow = 0;

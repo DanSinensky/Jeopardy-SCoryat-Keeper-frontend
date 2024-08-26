@@ -18,18 +18,18 @@ export const createScore = async (score) => {
   }
 };
 
-export const updateScore = async (gameId, userId, newScore) => {
+export const updateScore = async (id, score) => {
   try {
-    const response = await api.put(`/scores/${gameId}/${userId}`, { newScore });
+    const response = await api.put(`/scores/${id}`, score);
     return response.data;
   } catch (error) {
     throw error;
   }
 };
 
-export const deleteScore = async (scoreId) => {
+export const deleteScore = async (id) => {
   try {
-    const response = await api.delete(`/scores/${scoreId}`);
+    const response = await api.delete(`/scores/${id}`);
     return response.data;
   } catch (error) {
     throw error;
