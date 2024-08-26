@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Cell.css';
 
 const Cell = ({
@@ -11,20 +11,44 @@ const Cell = ({
   wager,
   handleWagerChange,
   roundType,
-  userScore
+  userScore,
+  revealed
 }) => {
+  const [showClue, setShowClue] = useState(true);
+  const [scoreRegistered, setScoreRegistered] = useState(false);
+  const [wagerPlaced, setWagerPlaced] = useState(false);
+  const [error, setError] = useState('');
+
   if (!cell) return <td />;
 
   const isSelected = selectedCell && selectedCell.roundType === roundType && selectedCell.row === rowIndex + 1 && selectedCell.column === columnIndex + 1;
 
+  const toggleClueResponse = () => setShowClue(!showClue);
+
+  const handleScore = (score) => {
+    setScoreRegistered(true);
+    handleScoreUpdate(score);
+  };
+
+  const handleWager = (wager) => {
+    if (wager <= userScore) {
+      setWagerPlaced(true);
+      setError('');
+      handleWagerChange({ target: { value: wager } });
+    } else {
+      setError('Wager exceeds your current score. Please enter a valid wager.');
+    }
+  };
+
   const handleCellInteraction = () => {
     if (isSelected) {
-      if (cell.cellType === 'Final Jeopardy' && !wager) {
+      if (cell.cellType === 'Final Jeopardy' && !wagerPlaced) {
         return;
       }
-      handleCellClick({ row: rowIndex + 1, column: columnIndex + 1, cellType: cell.cellType });
+      handleCellClick(rowIndex, columnIndex, cell.cellType);
+      setShowClue(!showClue);
     } else {
-      handleCellClick({ row: rowIndex + 1, column: columnIndex + 1, cellType: cell.cellType });
+      handleCellClick(rowIndex, columnIndex, cell.cellType);
     }
   };
 
@@ -34,26 +58,35 @@ const Cell = ({
         cell.clue
       ) : (
         <>
-          {cell.cellType === 'Final Jeopardy' && !wager ? (
+          {cell.cellType === 'Final Jeopardy' && !wagerPlaced ? (
             <div>
               <label>Enter your wager:</label>
               <input
                 type="number"
                 value={wager}
-                onChange={handleWagerChange}
+                onBlur={(e) => handleWager(Number(e.target.value))}
                 max={userScore}
               />
+              {error && <p className="error">{error}</p>}
             </div>
           ) : (
             <>
-              <div>{cell.response}</div>
-              {cell.cellType === 'Final Jeopardy' ? null : (
-                <>
-                  <button onClick={() => handleScoreUpdate('Correct')}>Correct</button>
-                  <button onClick={() => handleScoreUpdate('Incorrect')}>Incorrect</button>
-                  <button onClick={() => handleScoreUpdate('No Guess')}>No Guess</button>
-                </>
-              )}
+              <div onClick={toggleClueResponse}>
+                {showClue ? (
+                  <p>{cell.clue}</p>
+                ) : (
+                  <div>
+                    <p>{cell.response}</p>
+                    {cell.cellType !== 'Final Jeopardy' && (
+                      <>
+                        <button disabled={scoreRegistered} onClick={() => handleScore('Correct')}>Correct</button>
+                        <button disabled={scoreRegistered} onClick={() => handleScore('Incorrect')}>Incorrect</button>
+                        <button disabled={scoreRegistered} onClick={() => handleScore('No Guess')}>No Guess</button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
             </>
           )}
         </>

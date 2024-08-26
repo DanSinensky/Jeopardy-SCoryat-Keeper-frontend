@@ -4,17 +4,24 @@ import './Round.css';
 import { updateScore } from '../../services/scores';
 
 const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell, userScore, onComplete }) => {
+  const [revealedCells, setRevealedCells] = useState({});
   const [wager, setWager] = useState('');
 
   useEffect(() => {
-    const allCellsRevealed = roundData.cells.every(row => Array.isArray(row) && row.every(cell => cell.revealed));
+    const allCellsRevealed = roundData.cells.every(row => 
+      Array.isArray(row) && row.every(cell => cell.revealed)
+    );
     if (allCellsRevealed && onComplete) {
       onComplete(roundType);
     }
   }, [roundData, roundType, onComplete]);
 
-  const handleCellClick = (cell) => {
-    setSelectedCell(cell);
+  const handleCellClick = (rowIndex, columnIndex, cellType) => {
+    setSelectedCell({ row: rowIndex + 1, column: columnIndex + 1, cellType });
+    setRevealedCells((prev) => ({
+      ...prev,
+      [`${rowIndex}-${columnIndex}`]: !prev[`${rowIndex}-${columnIndex}`],
+    }));
   };
 
   const handleScoreUpdate = async (result) => {
@@ -86,7 +93,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
   }
 
   return (
-    <div className="round">
+    <div className="round-container">
       <h3>{roundType}</h3>
       <table className="round-table">
         <thead>
@@ -115,6 +122,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
                   handleWagerChange={handleWagerChange}
                   roundType={roundType}
                   userScore={userScore}
+                  revealed={revealedCells[`${rowIndex}-${columnIndex}`]}
                 />
               ))}
             </tr>
