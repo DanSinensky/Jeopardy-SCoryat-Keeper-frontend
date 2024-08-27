@@ -10,7 +10,8 @@ const Cell = ({
   columnIndex,
   wager,
   handleWagerChange,
-  roundType
+  roundType,
+  userScore
 }) => {
   const [showClue, setShowClue] = useState(true);
   const [scoreRegistered, setScoreRegistered] = useState(false);

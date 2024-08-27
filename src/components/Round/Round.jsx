@@ -13,7 +13,7 @@ const parseCell = (cell) => {
   };
 };
 
-const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell }) => {
+const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell, userScore }) => {
   const [wager, setWager] = useState('');
 
   useEffect(() => {
@@ -108,8 +108,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
                   wager={wager}
                   handleWagerChange={handleWagerChange}
                   roundType={roundType}
-                  userScore={userScore}
-                  revealed={revealedCells[`${rowIndex}-${columnIndex}`]}
+                  userScore={userScore} // Pass userScore to Cell component
                 />
               ))}
             </tr>
@@ -119,7 +118,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
       {selectedCell && selectedCell.cellType === 'Final Jeopardy' && (
         <div>
           <label>Enter your wager:</label>
-          <input type="number" value={wager} onChange={handleWagerChange} max={userScore?.dollars || 0} />
+          <input type="number" value={wager} onChange={handleWagerChange} max={userScore || 0} />
         </div>
       )}
       {roundType !== 'Final Jeopardy' && (
