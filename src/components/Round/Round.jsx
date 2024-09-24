@@ -9,7 +9,7 @@ const parseCell = (cell) => {
     round: parts[0],
     column: parseInt(parts[1], 10),
     row: parseInt(parts[2], 10),
-    cellType: parts.length > 3 ? parts[3] : 'regular'
+    cellType: parts.length > 3 ? parts[3] : 'Final Jeopardy'
   };
 };
 
@@ -108,7 +108,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
                   wager={wager}
                   handleWagerChange={handleWagerChange}
                   roundType={roundType}
-                  userScore={userScore} // Pass userScore to Cell component
+                  userScore={userScore}
                 />
               ))}
             </tr>
