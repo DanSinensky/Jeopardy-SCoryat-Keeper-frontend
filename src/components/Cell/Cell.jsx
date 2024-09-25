@@ -28,8 +28,6 @@ const Cell = ({
         cell.clue
       ) : (
         <>
-          <div>{cell.response}</div>
-
           {roundType === 'Final Jeopardy' ? (
             !wagerPlaced ? (
               <div>
@@ -44,6 +42,7 @@ const Cell = ({
               </div>
             ) : (
               <>
+                <div>{cell.response}</div>
                 <button onClick={() => handleScoreUpdate('Correct')}>Correct</button>
                 <button onClick={() => handleScoreUpdate('Incorrect')}>Incorrect</button>
                 <button onClick={() => handleScoreUpdate('No Guess')}>No Guess</button>
@@ -51,6 +50,7 @@ const Cell = ({
             )
           ) : (
             <>
+              <div>{cell.response}</div> 
               <button onClick={() => handleScoreUpdate('Correct')}>Correct</button>
               <button onClick={() => handleScoreUpdate('Incorrect')}>Incorrect</button>
               <button onClick={() => handleScoreUpdate('No Guess')}>No Guess</button>
