@@ -20,13 +20,10 @@ const parseCell = (cell) => {
 const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell, userScore }) => {
   const [wager, setWager] = useState('');
 
-  useEffect(() => {
-    console.log('roundData:', roundData);
-  }, [roundData]);
-
   const handleCellClick = (cell) => {
     if (selectedCell !== cell) {
       setSelectedCell({ ...cell, roundType });
+      setWager('');
     }
   };
 
@@ -35,7 +32,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
 
     let newScore;
     if (selectedCell.cellType === 'Final Jeopardy') {
-      newScore = value === 'Correct' ? parseInt(wager, 10) : -parseInt(wager, 10);
+      newScore = value === 'Correct' ? parseInt(wager, 10) : value === 'Incorrect' ? -parseInt(wager, 10) : 0;
     } else {
       newScore = value === 'Correct' ? points : value === 'Incorrect' ? -points : 0;
     }
@@ -119,17 +116,12 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
           ))}
         </tbody>
       </table>
-      {/* {selectedCell && selectedCell.cellType === 'Final Jeopardy' && (
-        <div>
-          <label>Enter your wager:</label>
-          <input type="number" value={wager} onChange={handleWagerChange} max={userScore || 0} />
-        </div>
-      )} */}
       {roundType !== 'Final Jeopardy' && (
         <button onClick={() => onComplete(roundType)}>Complete {roundType}</button>
       )}
     </div>
   );
 };
+
 
 export default Round;
