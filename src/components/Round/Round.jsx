@@ -9,7 +9,11 @@ const parseCell = (cell) => {
     round: parts[0],
     column: parseInt(parts[1], 10),
     row: parseInt(parts[2], 10),
-    cellType: parts.length > 3 ? parts[3] : 'Final Jeopardy'
+    cellType: (parts.length === 3)
+    ? 'Final Jeopardy'
+    : (parts[0] === 'J')
+      ? 'Jeopardy'
+      : 'Double Jeopardy'
   };
 };
 
@@ -115,12 +119,12 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
           ))}
         </tbody>
       </table>
-      {selectedCell && selectedCell.cellType === 'Final Jeopardy' && (
+      {/* {selectedCell && selectedCell.cellType === 'Final Jeopardy' && (
         <div>
           <label>Enter your wager:</label>
           <input type="number" value={wager} onChange={handleWagerChange} max={userScore || 0} />
         </div>
-      )}
+      )} */}
       {roundType !== 'Final Jeopardy' && (
         <button onClick={() => onComplete(roundType)}>Complete {roundType}</button>
       )}
