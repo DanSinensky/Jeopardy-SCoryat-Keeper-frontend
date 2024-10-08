@@ -59,7 +59,7 @@ const GameDetails = ({ user }) => {
 
     const fetchScores = async () => {
       try {
-        if (id) {
+        if (id && user) {
           const scores = await getScoresByGame(id);
           setScores(scores);
         }
@@ -68,9 +68,19 @@ const GameDetails = ({ user }) => {
       }
     };
 
-    fetchGame();
-    fetchScores();
-  }, [id]);
+    if (user) {
+      fetchGame();
+      fetchScores();
+    }
+  }, [id, user]);
+
+  useEffect(() => {
+    console.log("User in GameDetails:", user);
+  }, [user]);
+
+  if (!user) {
+    return <p>Loading user information...</p>;
+  }
 
   const currentUserScore = scores.find(score => score.user._id === user._id)?.dollars || 0;
 

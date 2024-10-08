@@ -9,23 +9,44 @@ export const getScores = async () => {
   }
 };
 
-export const createScore = async (score) => {
+export const createOrUpdateScore = async (userId, gameId, dollars) => {
   try {
-    const response = await api.post("/scores", score);
+    const response = await api.post('/api/scores', { userId, gameId, dollars });
     return response.data;
   } catch (error) {
+    console.error('Error creating or updating score:', error);
     throw error;
   }
 };
 
-export const updateScore = async (id, score) => {
-  try {
-    const response = await api.put(`/scores/${id}`, score);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
+// export const createScore = async ({ dollars, userId, gameId }) => {
+//   try {
+//     const response = await api.post('/scores', {
+//       dollars,
+//       userId,
+//       gameId
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error('Failed to create score:', error);
+//     throw error;
+//   }
+// };
+
+// export const updateScore = async ({ dollars, userId, gameId }) => {
+//   try {
+//     const response = await api.put('/scores', {
+//       dollars,
+//       userId,
+//       gameId
+//     });
+//     return response.data;
+//   } catch (error) {
+//     console.error('Failed to update score:', error);
+//     throw error;
+//   }
+// };
+
 
 export const deleteScore = async (id) => {
   try {
@@ -50,6 +71,7 @@ export const getScoresByGame = async (gameId) => {
     const response = await api.get(`/scores/game/${gameId}`);
     return response.data;
   } catch (error) {
+    console.error('Failed to fetch scores:', error);
     throw error;
   }
 };

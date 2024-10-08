@@ -16,7 +16,6 @@ const Cell = ({
   const [showClue, setShowClue] = useState(true);
   const [scoreSubmitted, setScoreSubmitted] = useState(false);
   const [wagerPlaced, setWagerPlaced] = useState(false);
-  const [error, setError] = useState('');
 
   useEffect(() => {
     if (!selectedCell || selectedCell.row !== rowIndex + 1 || selectedCell.column !== columnIndex + 1) {
@@ -25,14 +24,16 @@ const Cell = ({
     }
   }, [selectedCell, rowIndex, columnIndex]);
 
+  const onResponseSelected = (value) => {
+    if (!scoreSubmitted) {
+      handleScoreUpdate(value);
+      setScoreSubmitted(true);
+    }
+  };
+
   if (!cell) return <td />;
 
   const isSelected = selectedCell && selectedCell.roundType === roundType && selectedCell.row === rowIndex + 1 && selectedCell.column === columnIndex + 1;
-
-  const handleScoreClick = (value) => {
-    handleScoreUpdate(value);
-    setScoreSubmitted(true);
-  };
 
   return (
     <td
@@ -60,26 +61,26 @@ const Cell = ({
               ) : (
                 <>
                   <div>{cell.response}</div>
-                  <button onClick={() => handleScoreClick('Correct')} disabled={scoreSubmitted}>Correct</button>
-                  <button onClick={() => handleScoreClick('Incorrect')} disabled={scoreSubmitted}>Incorrect</button>
-                  <button onClick={() => handleScoreClick('No Guess')} disabled={scoreSubmitted}>No Guess</button>
+                  <button onClick={() => onResponseSelected('Correct')} disabled={scoreSubmitted}>Correct</button>
+                  <button onClick={() => onResponseSelected('Incorrect')} disabled={scoreSubmitted}>Incorrect</button>
+                  <button onClick={() => onResponseSelected('No Guess')} disabled={scoreSubmitted}>No Guess</button>
                 </>
               )}
             </>
           )
         ) : (
           <>
-              {showClue ? (
-                <div onClick={() => setShowClue(false)}>{cell.clue}</div>
-              ) : (
-                <>
-                  <div>{cell.response}</div>
-                  <button onClick={() => handleScoreClick('Correct')} disabled={scoreSubmitted}>Correct</button>
-                  <button onClick={() => handleScoreClick('Incorrect')} disabled={scoreSubmitted}>Incorrect</button>
-                  <button onClick={() => handleScoreClick('No Guess')} disabled={scoreSubmitted}>No Guess</button>
-                </>
-              )}
-            </>
+            {showClue ? (
+              <div onClick={() => setShowClue(false)}>{cell.clue}</div>
+            ) : (
+              <>
+                <div>{cell.response}</div>
+                <button onClick={() => onResponseSelected('Correct')} disabled={scoreSubmitted}>Correct</button>
+                <button onClick={() => onResponseSelected('Incorrect')} disabled={scoreSubmitted}>Incorrect</button>
+                <button onClick={() => onResponseSelected('No Guess')} disabled={scoreSubmitted}>No Guess</button>
+              </>
+            )}
+          </>
         )
       }
     </td>

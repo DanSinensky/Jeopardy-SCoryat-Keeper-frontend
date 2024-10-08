@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { createScore, updateScore, getScoresByUser } from '../../services/scores';
+import { createOrUpdateScore, getScoresByUser } from '../../services/scores';
 import Cell from '../Cell/Cell';
 import './Round.css';
+import { jwtDecode } from 'jwt-decode';
 
 const parseCell = (cell) => {
   const parts = cell.split('_');
@@ -9,16 +10,17 @@ const parseCell = (cell) => {
     round: parts[0],
     column: parseInt(parts[1], 10),
     row: parseInt(parts[2], 10),
-    cellType: (parts.length === 3)
-    ? 'Final Jeopardy'
-    : (parts[0] === 'J')
-      ? 'Jeopardy'
-      : 'Double Jeopardy'
+    cellType: (parts[0] === 'J')
+    ? 'Jeopardy'
+    : (parts[0] === 'DJ')
+      ? 'Double Jeopardy'
+      : 'Final Jeopardy'
   };
 };
 
 const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelectedCell, userScore }) => {
   const [wager, setWager] = useState('');
+  const [error, setError] = useState('');
 
   const handleCellClick = (cell) => {
     if (selectedCell !== cell) {
@@ -28,6 +30,8 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
   };
 
   const handleScoreUpdate = async (value) => {
+    if (!selectedCell) return;
+
     const points = roundType === 'Jeopardy' ? selectedCell.row * 200 : selectedCell.row * 400;
 
     let newScore;
@@ -38,24 +42,29 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
     }
 
     try {
-      const existingScores = await getScoresByUser(userId);
-      const score = existingScores.find((s) => s.gameId === gameId);
-      if (score) {
-        await updateScore(score._id, { dollars: score.dollars + newScore });
-      } else {
-        await createScore({ dollars: newScore, userId, gameId });
-      }
+      const token = localStorage.getItem('token');
+      const { id: userId } = jwtDecode(token);
+      await createOrUpdateScore(userId, gameId, dollar);
     } catch (error) {
       console.error('Failed to update score:', error);
     }
 
-    setSelectedCell(null);
+    setTimeout(() => setSelectedCell(null), 0);
   };
 
   const handleWagerChange = (event) => {
-    setWager(event.target.value);
+    const value = parseInt(event.target.value, 10);
+    
+    if (value > userScore) {
+      setError('Wager cannot exceed your current score.');
+    } else if (value < 0) {
+      setError('Wager cannot be negative.');
+    } else {
+      setError('');
+      setWager(value);
+    }
   };
-
+  
   let maxRow = 0;
   let maxColumn = 0;
   if (roundData?.cells) {
@@ -120,8 +129,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
         <button onClick={() => onComplete(roundType)}>Complete {roundType}</button>
       )}
     </div>
-  );
+  );  
 };
-
 
 export default Round;
