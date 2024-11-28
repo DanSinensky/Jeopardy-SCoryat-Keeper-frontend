@@ -9,43 +9,44 @@ export const getScores = async () => {
   }
 };
 
-export const createOrUpdateScore = async (userId, gameId, dollars) => {
+// export const createOrUpdateScore = async (userId, gameId, dollars) => {
+//   try {
+//     const response = await api.post('/scores', { userId, gameId, dollars });
+//     return response.data;
+//   } catch (error) {
+//     console.error('Error creating or updating score:', error);
+//     throw error;
+//   }
+// };
+
+export const createScore = async ({ dollars, userId, gameId }) => {
   try {
-    const response = await api.post('/api/scores', { userId, gameId, dollars });
+    const response = await api.post('/scores', {
+      dollars,
+      user: userId,
+      game: gameId
+    });
     return response.data;
   } catch (error) {
-    console.error('Error creating or updating score:', error);
+    console.error('Failed to create score:', error);
     throw error;
   }
 };
 
-// export const createScore = async ({ dollars, userId, gameId }) => {
-//   try {
-//     const response = await api.post('/scores', {
-//       dollars,
-//       userId,
-//       gameId
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Failed to create score:', error);
-//     throw error;
-//   }
-// };
-
-// export const updateScore = async ({ dollars, userId, gameId }) => {
-//   try {
-//     const response = await api.put('/scores', {
-//       dollars,
-//       userId,
-//       gameId
-//     });
-//     return response.data;
-//   } catch (error) {
-//     console.error('Failed to update score:', error);
-//     throw error;
-//   }
-// };
+export const updateScore = async (scoreId, data) => {
+  try {
+    const response = await api.put(`/scores/${scoreId}`, {
+      dollars: data.dollars,
+      user: data.user,
+      game: data.game
+    });
+    console.log(`/scores/${scoreId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Failed to update score:', error);
+    throw error;
+  }
+};
 
 
 export const deleteScore = async (id) => {

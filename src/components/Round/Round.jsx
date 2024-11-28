@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { createOrUpdateScore, getScoresByUser } from '../../services/scores';
+import { createScore, updateScore, getScoresByUser } from '../../services/scores';
 import Cell from '../Cell/Cell';
 import './Round.css';
 import { jwtDecode } from 'jwt-decode';
@@ -29,7 +29,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
     }
   };
 
-  const handleScoreUpdate = async (value) => {
+  const handleScoreUpdate = async (value, scoreId) => {
     if (!selectedCell) return;
 
     const points = roundType === 'Jeopardy' ? selectedCell.row * 200 : selectedCell.row * 400;
@@ -43,13 +43,27 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
 
     try {
       const token = localStorage.getItem('token');
+      if (!token) throw new Error('User not authenticated');
+
       const { id: userId } = jwtDecode(token);
-      await createOrUpdateScore(userId, gameId, dollar);
+      const existingScores = await getScoresByUser(userId);
+
+      const score = existingScores.find((s) => s.gameId === gameId);
+      if (score) {
+        console.log('scoreId:', scoreId);
+        await updateScore(score._id, {
+          dollars: score.dollars + newScore,
+          user: userId,
+          game: gameId,
+        });        
+      } else {
+        await createScore({ dollars: newScore, user: userId, game: gameId });
+      }
     } catch (error) {
       console.error('Failed to update score:', error);
+    } finally {
+      setSelectedCell(null);
     }
-
-    setTimeout(() => setSelectedCell(null), 0);
   };
 
   const handleWagerChange = (event) => {
