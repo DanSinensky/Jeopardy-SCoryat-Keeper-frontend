@@ -82,7 +82,14 @@ const GameDetails = ({ user }) => {
     return <p>Loading user information...</p>;
   }
 
-  const currentUserScore = scores.find(score => score.user._id === user._id)?.dollars || 0;
+  const currentUserScore = scores?.find(score => score.user?.id === user.id)?.dollars || 0;
+
+  console.log('Scores data:', scores);
+  console.log('currentUserScore', currentUserScore)
+  console.log('user._id', user.id)
+  if (!user.id) {
+    return <p>Loading...</p>
+  }
 
   return (
     <div className="game-details">
@@ -94,14 +101,14 @@ const GameDetails = ({ user }) => {
             <ul>
               {scores.map((score) => (
                 <li key={score._id}>
-                  {score.user.username}: ${score.dollars}
+                  {score.user ? `${score.user.username}: $${score.dollars}` : 'Unknown user'}
                 </li>
               ))}
             </ul>
           </div>
           <Round
             roundData={game.jeopardy_round}
-            userId={user._id}
+            userId={user.id}
             gameId={game._id}
             roundType="Jeopardy"
             selectedCell={selectedCell}
@@ -110,7 +117,7 @@ const GameDetails = ({ user }) => {
           />
           <Round
             roundData={game.double_jeopardy_round}
-            userId={user._id}
+            userId={user.id}
             gameId={game._id}
             roundType="Double Jeopardy"
             selectedCell={selectedCell}
@@ -119,7 +126,7 @@ const GameDetails = ({ user }) => {
           />
           <Round
             roundData={game.final_jeopardy_round}
-            userId={user._id}
+            userId={user.id}
             gameId={game._id}
             roundType="Final Jeopardy"
             selectedCell={selectedCell}
