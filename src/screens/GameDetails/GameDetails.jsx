@@ -89,6 +89,16 @@ const GameDetails = ({ user }) => {
       {game ? (
         <>
           <h1>{game.title}</h1>
+          <div className="scores-list">
+            <h2>Scores</h2>
+            <ul>
+              {scores.map((score) => (
+                <li key={score._id}>
+                  {score.user.username}: ${score.dollars}
+                </li>
+              ))}
+            </ul>
+          </div>
           <Round
             roundData={game.jeopardy_round}
             userId={user._id}

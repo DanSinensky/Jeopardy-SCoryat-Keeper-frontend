@@ -29,7 +29,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
     }
   };
 
-  const handleScoreUpdate = async (value, scoreId) => {
+  const handleScoreUpdate = async (value) => {
     if (!selectedCell) return;
 
     const points = roundType === 'Jeopardy' ? selectedCell.row * 200 : selectedCell.row * 400;
@@ -50,7 +50,7 @@ const Round = ({ roundData, userId, gameId, roundType, selectedCell, setSelected
 
       const score = existingScores.find((s) => s.gameId === gameId);
       if (score) {
-        console.log('scoreId:', scoreId);
+        console.log('scoreId:', score._id);
         await updateScore(score._id, {
           dollars: score.dollars + newScore,
           user: userId,
